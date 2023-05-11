@@ -1,0 +1,26 @@
+---
+
+- name: "Playbook to configure objects and object groups"
+  hosts: spain
+  gather_facts: false
+  
+  vars:
+    ips: "{{ lookup('file','ips.txt').splitlines() }}"
+
+  tasks:
+    - name: "Configure test object group"
+      cisco.asa.asa_ogs:
+        config:
+          - object_type: network
+            object_groups:
+              - name: test
+                description: This is a test
+                network_oject:
+                    {% for item in ips %}
+                    - "{{ item | ansible.utils.ipaddr }}"
+                    {% endfor %}
+      register: output
+
+    - name: "Check done on the firewall"
+      debug:
+        msg: "{{ output }}"
