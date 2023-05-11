@@ -1,0 +1,18 @@
+---
+
+- name: "Playbook to configure objects and object groups"
+  hosts: 10.6.1.17
+  gather_facts: false
+  
+  vars:
+    ips: "{{ lookup('file','ips.txt').splitlines() }}"
+
+  tasks:
+    - name: "Read file with IPs"
+      debug:
+        msg: |
+          "{% for item in ips %}"
+          "Host address only: {{ item | ansible.utils.ipaddr('net') }} ++"
+          "{{ item | ansible.utils.ipaddr }} ++"
+          "{{ item | ansible.utils.ipaddr('prefix') }}"
+          "{% endfor %}"
