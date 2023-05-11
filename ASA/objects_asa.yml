@@ -1,0 +1,30 @@
+---
+
+- name: "Playbook to configure objects and object groups"
+  hosts: spain
+  gather_facts: false
+  
+  vars:
+    object_hosts:
+      - 10.8.3.51
+      - 10.10.1.51
+      - 10.5.3.51
+      - 10.6.3.51
+      - 10.7.3.51
+      - 10.31.3.15
+      - 10.1.32.72
+      - 10.1.32.73
+    object_group: Prueba
+  
+  tasks:
+    - name: "Create hosts and groups on Spain firewall"
+      cisco.asa.asa_config:
+        lines:
+          - network-object host {{ item }}
+        parents: object-group network {{ object_group }}
+      with_items: "{{ object_hosts }}"
+      register: output
+    
+    - name: "Check output"
+      debug:
+        msg: "{{ output }}"
