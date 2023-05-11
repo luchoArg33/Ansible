@@ -1,0 +1,17 @@
+---
+
+- name: "Random ASA playbook to test"
+  hosts: asa
+  gather_facts: false
+  
+  tasks:
+    - name: "run commands on ASA"
+      cisco.asa.asa_command:
+        commands:
+        - show version
+
+      register: asa_output
+      
+    - name: "show ASA output"
+      debug:
+        var: asa_output.stdout_lines
